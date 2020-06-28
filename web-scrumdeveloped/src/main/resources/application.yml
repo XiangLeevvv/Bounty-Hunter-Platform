@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    password: lx123456 #密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root #用户名
+    url: jdbc:mysql://cdb-mw8hntaa.bj.tencentcdb.com:10027/SE-Platform?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+server:
+  port: 9000
