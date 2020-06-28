@@ -1,5 +1,4 @@
 package com.example.backend.dao;
-
 import com.example.backend.entity.TaskDraftEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,3 +17,4 @@ public interface TaskDraftDAO extends JpaRepository<TaskDraftEntity,Integer> {
     TaskDraftEntity save(TaskDraftEntity draft);
     TaskDraftEntity findByTaskId(int id);
 }
+

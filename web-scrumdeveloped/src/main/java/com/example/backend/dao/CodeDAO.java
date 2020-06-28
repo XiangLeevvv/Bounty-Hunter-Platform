@@ -1,3 +1,4 @@
+
 package com.example.backend.dao;
 
 import com.example.backend.entity.CodeEntity;
@@ -13,3 +14,4 @@ public interface CodeDAO extends JpaRepository<CodeEntity,Integer> {
     List<CodeEntity> findByUserPhone(String userPhone);
     CodeEntity save(CodeEntity codeEntity);
 }
+

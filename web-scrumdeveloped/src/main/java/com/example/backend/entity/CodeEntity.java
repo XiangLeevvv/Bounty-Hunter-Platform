@@ -1,8 +1,10 @@
 package com.example.backend.entity;
 
+
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+
 
 
 @Entity
@@ -10,6 +12,7 @@ import javax.persistence.*;
 public class CodeEntity {
     private int id;
     private DateTime addtime;
+
     private String userPhone;
     private String code;
 
@@ -25,11 +28,13 @@ public class CodeEntity {
 
     @Basic
     @Column(name = "addtime")
+
     public DateTime getAddtime() {
         return addtime;
     }
 
     public void setAddtime(DateTime addtime) {
+
         this.addtime = addtime;
     }
 
