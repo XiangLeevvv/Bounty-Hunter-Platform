@@ -23,7 +23,8 @@ public class ServletCode {
         String status;
         String details;
 
-        if(data.containsKey("user_phone")) {
+        if(data.containsKey("user_phone")&&data.get("user_phone").length()==11) {
+
             int code = ((int) ((Math.random() * 9 + 1) * 100000));
             List<CodeEntity> list = codeDAO.findByUserPhone(data.get("user_phone"));
 
@@ -48,7 +49,7 @@ public class ServletCode {
         else
         {
             status="wrong";
-            details="连接失败";
+            details="请输入正确的手机号！";
         }
 
         map.put("status",status);

@@ -121,11 +121,20 @@ export default {
         }
       )
         .then((response) => {
+          if (response.data.status==="right"){
           this.$message.success({
             message: '获取成功',
             showClose: true,
             type: 'success'
           })
+          }
+          else{
+            this.$message.error({
+              message: response.data.details,
+              showClose: true,
+              type: 'error'
+            })
+          }
         },
         (response) => {
           this.$message.error({
@@ -137,8 +146,8 @@ export default {
         )
     },
     submitForm (formName) {
-      // this.$refs[formName].validate((valid) => {
-      // if (valid) {
+       this.$refs[formName].validate((valid) => {
+       if (valid) {
       this.$axios.post('api/register',
         {
           'user_name': this.ruleForm.name,
@@ -164,12 +173,12 @@ export default {
             type: 'error'
           })
         })
-        // } else {
-        //   console.log('error submit!!')
-        //   return false
-        // }
-      // }
-      // )
+         } else {
+           console.log('error submit!!')
+           return false
+         }
+       }
+       )
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
