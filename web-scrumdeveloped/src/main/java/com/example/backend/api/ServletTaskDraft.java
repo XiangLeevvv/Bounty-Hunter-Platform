@@ -33,149 +33,151 @@ public class ServletTaskDraft {
 
     DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-    public ServletTaskDraft(TaskDAO taskDAO, TaskDraftDAO taskDraftDAO, TaskDraftInfoDAO taskDraftInfoDAO) {
-        this.taskDAO = taskDAO;
-        this.taskDraftDAO = taskDraftDAO;
-        this.taskDraftInfoDAO = taskDraftInfoDAO;
-    }
-
     @PostMapping("/getDraftinfo")
     @ResponseBody
-    public Map<String, Object> getDraftinfo(@RequestBody Map<String, String> data) {
+    public Map<String,Object> getDraftinfo(@RequestBody Map<String, String> data)
+    {
         String status;
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("task_id")) {
+        if(data.containsKey("task_id"))
+        {
             TaskDraftInfoEntity taskDraftInfo = taskDraftInfoDAO.findById(Integer.parseInt(data.get("task_id")));
-            if (taskDraftInfo != null) {
+            if(taskDraftInfo != null) {
                 status = "right";
                 details = "";
-            } else {
-                status = "wrong";
-                details = "未查询到任务";
             }
-            map.put("List", taskDraftInfo);
-        } else {
-            status = "wrong";
-            details = "连接失败";
+            else {
+                status = "wrong";
+                details="草稿箱为空";
+            }
+            map.put("List",taskDraftInfo);
         }
-        map.put("status", status);
-        map.put("details", details);
+        else
+        {
+            status="wrong";
+            details="连接失败";
+        }
+        map.put("status",status);
+        map.put("details",details);
         return map;
     }
 
     @PostMapping("/getUserDrafts")
     @ResponseBody
-    public Map<String, Object> getUserDrafts(@RequestBody Map<String, String> data) {
+    public Map<String,Object> getUserDrafts(@RequestBody Map<String, String> data)
+    {
         String status;
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("user_name")) {
-            List<TaskDraftInfoEntity> taskDraftInfoList = taskDraftInfoDAO.findByCreator(data.get("user_name"));
-            if (taskDraftInfoList.size() > 0) {
+        if(data.containsKey("user_name"))
+        {
+            List<TaskDraftInfoEntity> taskDraftInfoList=taskDraftInfoDAO.findByCreator(data.get("user_name"));
+            if(taskDraftInfoList.size()>0) {
                 status = "right";
                 details = "";
-            } else {
-                status = "wrong";
-                details = "草稿箱为空";
             }
-            map.put("List", taskDraftInfoList);
-        } else {
-            status = "wrong";
-            details = "连接失败";
+            else {
+                status = "wrong";
+                details="草稿箱为空";
+            }
+            map.put("List",taskDraftInfoList);
         }
-        map.put("status", status);
-        map.put("details", details);
+        else
+        {
+            status="wrong";
+            details="连接失败";
+        }
+        map.put("status",status);
+        map.put("details",details);
         return map;
     }
 
     @PostMapping("/modifyDrafts")
     @ResponseBody
-    public Map<String, Object> modifyDrafts(@RequestBody Map<String, String> data) {
+    public Map<String,Object> modifyDrafts(@RequestBody Map<String, String> data)
+    {
         String status;
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("task_id")) {
-            List<TaskEntity> taskEntityList = taskDAO.findById(Integer.parseInt(data.get("task_id")));
-            if (taskEntityList.size() > 0) {
-                if (Double.parseDouble(data.get("task_bonus")) > 0) {
-                    TaskEntity taskEntity = taskEntityList.get(0);
-                    taskEntity.setInfo(data.get("task_info"));
-                    String time1 = data.get("begin_time");
-                    String beginTime = time1.substring(1, 11) + " " + time1.substring(12, 20);
-                    String time2 = data.get("end_time");
-                    String endTime = time2.substring(1, 11) + " " + time2.substring(12, 20);
-                    taskEntity.setBeginTime(Timestamp.valueOf(beginTime));
-                    taskEntity.setEndTime(Timestamp.valueOf(endTime));
-                    taskEntity.setBonus(Double.parseDouble(data.get("task_bonus")));
-                    taskEntity.setTags(data.get("task_type"));
-                    taskEntity.setTitle(data.get("task_title"));
-                    taskDAO.save(taskEntity);
-                    status = "right";
-                    details = "编辑成功";
-                } else {
-                    status = "wrong";
-                    details = "酬金不能为负";
-                }
-            } else {
-                status = "wrong";
-                details = "任务ID不存在";
-            }
+        if(data.containsKey("task_id")) {
+            TaskEntity taskEntity = taskDAO.findById(Integer.parseInt(data.get("task_id"))).get(0);
+            taskEntity.setInfo(data.get("task_info"));
+            String time1=data.get("begin_time");
+            String beginTime = time1.substring(1, 11) + " " + time1.substring(12, 20);
+            String time2=data.get("end_time");
+            String endTime = time2.substring(1, 11) + " " + time2.substring(12, 20);
+            taskEntity.setBeginTime(Timestamp.valueOf(beginTime));
+            taskEntity.setEndTime(Timestamp.valueOf(endTime));
+            taskEntity.setBonus(Double.parseDouble(data.get("task_bonus")));
+            taskEntity.setTags(data.get("task_type"));
+            taskEntity.setTitle(data.get("task_title"));
+            taskDAO.save(taskEntity);
+            status="right";
+            details="编辑成功";
         } else {
-            status = "wrong";
-            details = "连接失败";
+            status="wrong";
+            details="连接失败";
         }
-        map.put("status", status);
-        map.put("details", details);
+        map.put("status",status);
+        map.put("details",details);
         return map;
     }
 
     @PostMapping("/createDrafts")
     @ResponseBody
-    public Map<String, Object> createDrafts(@RequestBody Map<String, String> data) {
+    public Map<String,Object> createDrafts(@RequestBody Map<String, String> data)
+    {
         String status;
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("current_time")) {
+        if(data.containsKey("current_time"))
+        {
             Timestamp currentTime = Timestamp.valueOf(data.get("current_time"));
             TaskEntity taskEntity = taskDAO.findByCreateTime(currentTime).get(0);
             TaskDraftEntity taskDraft = new TaskDraftEntity();
             taskDraft.setTaskId(taskEntity.getId());
             taskDraft.setCreator(data.get("user_name"));
             taskDraftDAO.save(taskDraft);
-            status = "right";
-            details = "保存成功";
-        } else {
-            status = "wrong";
-            details = "连接失败";
+            status="right";
+            details="保存成功";
         }
-        map.put("status", status);
-        map.put("details", details);
+        else
+        {
+            status="wrong";
+            details="连接失败";
+        }
+        map.put("status",status);
+        map.put("details",details);
         return map;
     }
 
     @PostMapping("/deleteDrafts")
     @ResponseBody
-    public Map<String, Object> deleteDrafts(@RequestBody Map<String, String> data) {
+    public Map<String,Object> deleteDrafts(@RequestBody Map<String, String> data)
+    {
         String status;
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("task_id")) {
+        if(data.containsKey("task_id"))
+        {
 
             taskDraftDAO.deleteById(Integer.parseInt(data.get("task_id")));
-            status = "right";
-            details = "删除成功";
-        } else {
-            status = "wrong";
-            details = "连接失败";
+            status="right";
+            details="删除成功";
         }
-        map.put("status", status);
-        map.put("details", details);
+        else
+        {
+            status="wrong";
+            details="连接失败";
+        }
+        map.put("status",status);
+        map.put("details",details);
         return map;
     }
 
