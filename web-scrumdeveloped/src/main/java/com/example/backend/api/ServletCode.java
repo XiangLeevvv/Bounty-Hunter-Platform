@@ -16,6 +16,9 @@ public class ServletCode {
     @Autowired
     CodeDAO codeDAO;
 
+    public ServletCode(CodeDAO codeDAO){
+        this.codeDAO=codeDAO;
+    }
     @PostMapping("/getCode")
     @ResponseBody
     public Map<String, Object> getCode(@RequestBody Map<String, String> data) throws ClientException {
