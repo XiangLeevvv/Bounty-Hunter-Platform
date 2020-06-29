@@ -88,11 +88,11 @@ export default {
         if (!Number.isInteger(value)) {
           callback(new Error('请输入数字值'))
         } else {
-          // if (value > 100) {
-          //   callback(new Error('必须少于100元'))
-          // } else {
-          callback()
-          // }
+          if (value > 500) {
+            callback(new Error('限额500元'))
+          } else if (value < 0) {
+            callback(new Error('不能小于0'))
+          }
         }
       }, 1000)
     }
