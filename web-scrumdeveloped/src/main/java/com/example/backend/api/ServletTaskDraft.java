@@ -115,7 +115,7 @@ public class ServletTaskDraft {
                     taskEntity.setTitle(data.get("task_title"));
                     taskDAO.save(taskEntity);
                     status = "right";
-                    details = "编辑成功";
+                    details = "";
                 } else {
                     status = "wrong";
                     details = "酬金不能为负";
@@ -140,18 +140,23 @@ public class ServletTaskDraft {
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("current_time")) {
+        if (data.containsKey("current_time")&&data.get("current_time").length()>5) {
             Timestamp currentTime = Timestamp.valueOf(data.get("current_time"));
             TaskEntity taskEntity = taskDAO.findByCreateTime(currentTime).get(0);
             TaskDraftEntity taskDraft = new TaskDraftEntity();
             taskDraft.setTaskId(taskEntity.getId());
             taskDraft.setCreator(data.get("user_name"));
             taskDraftDAO.save(taskDraft);
-            status = "right";
-            details = "保存成功";
+            if(data.get("user_name")==""){
+                status="wrong";
+                details="用户名不存在";
+            }else {
+                status = "right";
+                details = "";
+            }
         } else {
             status = "wrong";
-            details = "连接失败";
+            details = "时间格式不合法";
         }
         map.put("status", status);
         map.put("details", details);
@@ -165,14 +170,14 @@ public class ServletTaskDraft {
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("task_id")) {
+        if (data.containsKey("task_id")&&data.get("task_id")!="") {
 
             taskDraftDAO.deleteById(Integer.parseInt(data.get("task_id")));
             status = "right";
-            details = "删除成功";
+            details = "";
         } else {
             status = "wrong";
-            details = "连接失败";
+            details = "任务ID不存在";
         }
         map.put("status", status);
         map.put("details", details);

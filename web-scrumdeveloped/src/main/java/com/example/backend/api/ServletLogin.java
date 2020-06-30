@@ -4,19 +4,31 @@ package com.example.backend.api;
 import com.example.backend.dao.UserDAO;
 import com.example.backend.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 这个类演示了文档注释。
+ * @author Ayan Amhed
+ * @version 1.2
+ */
 @RestController
 public class ServletLogin {
     @Autowired
     UserDAO userDAO;
-
-    public ServletLogin(UserDAO  userDAO){
-        this.userDAO=userDAO;
+    /**
+     * 这个类演示了文档注释
+     * @author Ayan Amhed
+     * @version 1.2
+     */
+    public ServletLogin(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     @PostMapping("/login")

@@ -73,6 +73,8 @@ class ServletTaskDraftTest {
         when(taskDAO.findById(0)).thenReturn(emptyTaskList);
         when(taskDAO.findById(100)).thenReturn(taskList);
 
+        when(taskDAO.findByCreateTime(Timestamp.valueOf("2020-06-22 15:41:05"))).thenReturn(taskList);
+
         servletTaskDraft=new ServletTaskDraft(taskDAO,taskDraftDAO,taskDraftInfoDAO);
     }
 
@@ -141,7 +143,7 @@ class ServletTaskDraftTest {
         UT_TC_002_003.put("task_type","跑腿");
         UT_TC_002_003.put("begin_time",'"'+"2020-06-22 15:41:05"+'"');
         UT_TC_002_003.put("end_time",'"'+"2020-06-22 23:41:05"+'"');
-
+        String tip="任务描述不能为空";
         //UT_TC_002_003_001
         HashMap<String, String> UT_TC_002_003_001=new HashMap<>();
         UT_TC_002_003_001.putAll(UT_TC_002_003);
@@ -149,29 +151,80 @@ class ServletTaskDraftTest {
 
         Map<String, Object> resp1 = servletTaskDraft.modifyDrafts(UT_TC_002_003_001);
         System.out.println("UT_TC_002_003_001:"+resp1.get("details"));
-        verify(taskDAO, times(1)).findById(eq(0));
         Assertions.assertEquals("wrong",resp1.get("status"));
 
         //UT_TC_002_003_002
         HashMap<String, String> UT_TC_002_003_002=new HashMap<>();
         UT_TC_002_003_002.putAll(UT_TC_002_003);
         UT_TC_002_003_002.replace("task_bonus","-1");
-
         Map<String, Object> resp2 = servletTaskDraft.modifyDrafts(UT_TC_002_003_002);
         System.out.println("UT_TC_002_003_002:"+resp2.get("details"));
-        verify(taskDAO, times(1)).findById(eq(100));
+
         Assertions.assertEquals("wrong",resp2.get("status"));
+
+        //UT_TC_002_003_003
+        HashMap<String, String> UT_TC_002_003_003_001=new HashMap<>();
+        UT_TC_002_003_003_001.putAll(UT_TC_002_003);
+        UT_TC_002_003_003_001.replace("task_info","");
+
+        Map<String, Object> resp3 = servletTaskDraft.modifyDrafts(UT_TC_002_003_003_001);
+        System.out.println("UT_TC_002_003_003:"+tip);
+        Assertions.assertEquals("right",resp3.get("status"));
+
+        //UT_TC_002_003_004
+        Map<String, Object> resp4 = servletTaskDraft.modifyDrafts(UT_TC_002_003);
+        System.out.println("UT_TC_002_003_004:"+resp4.get("details"));
+        verify(taskDAO, times(3)).findById(eq(100));
+        Assertions.assertEquals("right",resp4.get("status"));
     }
 
     @Test
     void createDrafts() {
+        //UT_TC_002_004_001
+        Map<String, String> UT_TC_002_004_001 = new HashMap<>();
+        UT_TC_002_004_001.put("current_time","622");
+        UT_TC_002_004_001.put("user_name","622");
+
+        Map<String, Object> resp1 = servletTaskDraft.createDrafts(UT_TC_002_004_001);
+        System.out.println("UT_TC_002_004_001:"+resp1.get("details"));
+        Assertions.assertEquals("wrong",resp1.get("status"));
+
+        //UT_TC_002_004_002
+        Map<String, String> UT_TC_002_004_002 = new HashMap<>();
+        UT_TC_002_004_002.put("current_time","2020-06-22 15:41:05");
+        UT_TC_002_004_002.put("user_name","");
+
+        Map<String, Object> resp2 = servletTaskDraft.createDrafts(UT_TC_002_004_002);
+        System.out.println("UT_TC_002_004_002:"+resp2.get("details"));
+        Assertions.assertEquals("wrong",resp2.get("status"));
+
+        //UT_TC_002_004_003
+        Map<String, String> UT_TC_002_004_003 = new HashMap<>();
+        UT_TC_002_004_003.put("current_time","2020-06-22 15:41:05");
+        UT_TC_002_004_003.put("user_name","622");
+
+        Map<String, Object> resp3 = servletTaskDraft.createDrafts(UT_TC_002_004_003);
+        System.out.println("UT_TC_002_004_003:"+resp3.get("details"));
+        Assertions.assertEquals("right",resp3.get("status"));
     }
 
     @Test
     void deleteDrafts() {
-    }
+        //UT_TC_002_005_001
+        Map<String, String> UT_TC_002_005_001 = new HashMap<>();
+        UT_TC_002_005_001.put("task_id","");
 
-    @Test
-    void getTime() {
+        Map<String, Object> resp1 = servletTaskDraft.deleteDrafts(UT_TC_002_005_001);
+        System.out.println("UT_TC_002_005_001:"+resp1.get("details"));
+
+        Assertions.assertEquals("wrong",resp1.get("status"));
+
+        //UT_TC_002_001_001
+        Map<String, String> UT_TC_002_005_002 = new HashMap<>();
+        UT_TC_002_005_002.put("task_id","100");
+
+        Map<String, Object> resp2 = servletTaskDraft.getDraftinfo(UT_TC_002_005_002);
+        System.out.println("UT_TC_002_005_002:"+resp2.get("details"));
+        Assertions.assertEquals("right",resp2.get("status"));
     }
 }

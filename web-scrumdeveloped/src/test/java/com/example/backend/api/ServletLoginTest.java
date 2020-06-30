@@ -34,12 +34,15 @@ class ServletLoginTest {
     void setUp() {
         //打桩
         List<UserEntity> userList= new ArrayList<UserEntity>();
+        List<UserEntity> emptyList= new ArrayList<UserEntity>();
         UserEntity user=new UserEntity();
-        user.setUserName("620");
-        user.setUserPassword("620");
+        user.setUserName("622");
+        user.setUserPassword("622");
         userList.add(user);
         userDAO= mock(UserDAO.class);
-        when(userDAO.findByUserName("620")).thenReturn(userList);
+        when(userDAO.findByUserName("622")).thenReturn(userList);
+        when(userDAO.findByUserName("")).thenReturn(emptyList);
+        when(userDAO.findByUserName("asd")).thenReturn(emptyList);
         servletLogin=new ServletLogin(userDAO);
     }
 
@@ -49,15 +52,52 @@ class ServletLoginTest {
 
     @Test
     void doLogin() {
-        Map<String, String> req = new HashMap<>();
-        req.put("user_name","620");
-        req.put("user_password","620");
+        //UT_TC_001_001_001
+        Map<String, String> UT_TC_001_001_001_001 = new HashMap<>();
+        UT_TC_001_001_001_001.put("user_name","");
+        UT_TC_001_001_001_001.put("user_password","622");
 
-        Map<String, Object> resp = servletLogin.doLogin(req);
-        System.out.println(resp.get("details"));
-        verify(userDAO, times(1)).findByUserName(eq("620"));
-        Assertions.assertEquals("right",resp.get("status"));
+        Map<String, Object> resp1 = servletLogin.doLogin(UT_TC_001_001_001_001);
+        System.out.println("UT_TC_001_001_001_001:"+resp1.get("details"));
+        verify(userDAO, times(1)).findByUserName(eq(""));
+        Assertions.assertEquals("wrong",resp1.get("status"));
 
+        Map<String, String> UT_TC_001_001_001_002 = new HashMap<>();
+        UT_TC_001_001_001_002.put("user_name","622");
+        UT_TC_001_001_001_002.put("user_password","");
+
+        Map<String, Object> resp2 = servletLogin.doLogin(UT_TC_001_001_001_002);
+        System.out.println("UT_TC_001_001_001_002:"+resp2.get("details"));
+        verify(userDAO, times(1)).findByUserName(eq("622"));
+        Assertions.assertEquals("wrong",resp2.get("status"));
+
+        //UT_TC_001_001_002
+        Map<String, String> UT_TC_001_001_002 = new HashMap<>();
+        UT_TC_001_001_002.put("user_name","asd");
+        UT_TC_001_001_002.put("user_password","622");
+
+        Map<String, Object> resp3 = servletLogin.doLogin(UT_TC_001_001_002);
+        System.out.println("UT_TC_001_001_002:"+resp3.get("details"));
+        verify(userDAO, times(1)).findByUserName(eq("asd"));
+        Assertions.assertEquals("wrong",resp3.get("status"));
+
+        //UT_TC_001_001_003
+        Map<String, String> UT_TC_001_001_003 = new HashMap<>();
+        UT_TC_001_001_003.put("user_name","622");
+        UT_TC_001_001_003.put("user_password","000");
+
+        Map<String, Object> resp4 = servletLogin.doLogin(UT_TC_001_001_003);
+        System.out.println("UT_TC_001_001_003:"+resp4.get("details"));
+        Assertions.assertEquals("wrong",resp4.get("status"));
+
+        //UT_TC_001_001_004
+        Map<String, String> UT_TC_001_001_004 = new HashMap<>();
+        UT_TC_001_001_004.put("user_name","622");
+        UT_TC_001_001_004.put("user_password","622");
+
+        Map<String, Object> resp5 = servletLogin.doLogin(UT_TC_001_001_004);
+        System.out.println("UT_TC_001_001_003:"+resp5.get("details"));
+        Assertions.assertEquals("right",resp5.get("status"));
     }
 
 }
