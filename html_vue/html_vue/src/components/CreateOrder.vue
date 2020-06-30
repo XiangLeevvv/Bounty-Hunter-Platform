@@ -232,7 +232,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.visible=false;
+          this.visible = false
           let nodes = this.$refs['cascaderAddr'].getCheckedNodes()
           let i = 0
           let tags = []
@@ -374,15 +374,15 @@ export default {
       m = m < 10 ? ('0' + m) : m
       let s = date.getSeconds()
       s = s < 10 ? ('0' + s) : s
-      return '"'+y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s+'"'
+      return '"' + y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s + '"'
     },
 
-    beforeSubmit:function (formName) {
+    beforeSubmit: function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.visible=true;
-        }else{
-          this.visible=false;
+          this.visible = true
+        } else {
+          this.visible = false
         }
       })
     },
