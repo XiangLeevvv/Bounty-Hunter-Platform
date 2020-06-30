@@ -223,7 +223,7 @@ class ServletTaskDraftTest {
         Map<String, String> UT_TC_002_005_002 = new HashMap<>();
         UT_TC_002_005_002.put("task_id","100");
 
-        Map<String, Object> resp2 = servletTaskDraft.getDraftinfo(UT_TC_002_005_002);
+        Map<String, Object> resp2 = servletTaskDraft.deleteDrafts(UT_TC_002_005_002);
         System.out.println("UT_TC_002_005_002:"+resp2.get("details"));
         Assertions.assertEquals("right",resp2.get("status"));
     }

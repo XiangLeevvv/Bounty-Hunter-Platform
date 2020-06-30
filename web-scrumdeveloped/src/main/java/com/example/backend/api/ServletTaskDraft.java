@@ -1,4 +1,3 @@
-
 package com.example.backend.api;
 
 import com.example.backend.dao.TaskDAO;
@@ -7,20 +6,20 @@ import com.example.backend.dao.TaskDraftInfoDAO;
 import com.example.backend.entity.TaskDraftEntity;
 import com.example.backend.entity.TaskDraftInfoEntity;
 import com.example.backend.entity.TaskEntity;
-import com.example.backend.entity.TaskPublishedEntity;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 这个类用于草稿相关操作.
+ * @author ghy
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api")
 public class ServletTaskDraft {
@@ -33,17 +32,26 @@ public class ServletTaskDraft {
 
     DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * 用于单元测试初始化TaskDraft类.
+     * @param taskDAO,taskDraftDAO,taskDraftInfoDAO 接收任务相关DAO类
+     */
     public ServletTaskDraft(TaskDAO taskDAO, TaskDraftDAO taskDraftDAO, TaskDraftInfoDAO taskDraftInfoDAO) {
         this.taskDAO = taskDAO;
         this.taskDraftDAO = taskDraftDAO;
         this.taskDraftInfoDAO = taskDraftInfoDAO;
     }
 
+    /**
+     * 获取草稿信息.
+     * @param data 接收task id.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/getDraftinfo")
     @ResponseBody
     public Map<String, Object> getDraftinfo(@RequestBody Map<String, String> data) {
-        String status;
-        String details;
+        String status="wrong";
+        String details="连接失败";
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (data.containsKey("task_id")) {
@@ -56,20 +64,22 @@ public class ServletTaskDraft {
                 details = "未查询到任务";
             }
             map.put("List", taskDraftInfo);
-        } else {
-            status = "wrong";
-            details = "连接失败";
         }
         map.put("status", status);
         map.put("details", details);
         return map;
     }
 
+    /**
+     * 获取用户草稿箱.
+     * @param data 接收用户名.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/getUserDrafts")
     @ResponseBody
     public Map<String, Object> getUserDrafts(@RequestBody Map<String, String> data) {
-        String status;
-        String details;
+        String status="wrong";
+        String details="连接失败";
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (data.containsKey("user_name")) {
@@ -82,20 +92,22 @@ public class ServletTaskDraft {
                 details = "草稿箱为空";
             }
             map.put("List", taskDraftInfoList);
-        } else {
-            status = "wrong";
-            details = "连接失败";
         }
         map.put("status", status);
         map.put("details", details);
         return map;
     }
 
+    /**
+     * 修改草稿.
+     * @param data 接受task信息.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/modifyDrafts")
     @ResponseBody
     public Map<String, Object> modifyDrafts(@RequestBody Map<String, String> data) {
-        String status;
-        String details;
+        String status="wrong";
+        String details="连接失败";
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (data.containsKey("task_id")) {
@@ -124,15 +136,17 @@ public class ServletTaskDraft {
                 status = "wrong";
                 details = "任务ID不存在";
             }
-        } else {
-            status = "wrong";
-            details = "连接失败";
         }
         map.put("status", status);
         map.put("details", details);
         return map;
     }
 
+    /**
+     * 创建草稿.
+     * @param data 接收草稿信息.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/createDrafts")
     @ResponseBody
     public Map<String, Object> createDrafts(@RequestBody Map<String, String> data) {
@@ -140,17 +154,17 @@ public class ServletTaskDraft {
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("current_time")&&data.get("current_time").length()>5) {
+        if (data.containsKey("current_time") && data.get("current_time").length() > 5) {
             Timestamp currentTime = Timestamp.valueOf(data.get("current_time"));
             TaskEntity taskEntity = taskDAO.findByCreateTime(currentTime).get(0);
             TaskDraftEntity taskDraft = new TaskDraftEntity();
             taskDraft.setTaskId(taskEntity.getId());
             taskDraft.setCreator(data.get("user_name"));
             taskDraftDAO.save(taskDraft);
-            if(data.get("user_name")==""){
-                status="wrong";
-                details="用户名不存在";
-            }else {
+            if (data.get("user_name") == "") {
+                status = "wrong";
+                details = "用户名不存在";
+            } else {
                 status = "right";
                 details = "";
             }
@@ -163,6 +177,11 @@ public class ServletTaskDraft {
         return map;
     }
 
+    /**
+     * 删除草稿.
+     * @param data 接收task id.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/deleteDrafts")
     @ResponseBody
     public Map<String, Object> deleteDrafts(@RequestBody Map<String, String> data) {
@@ -170,7 +189,7 @@ public class ServletTaskDraft {
         String details;
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (data.containsKey("task_id")&&data.get("task_id")!="") {
+        if (data.containsKey("task_id") && !data.get("task_id").equals("")) {
 
             taskDraftDAO.deleteById(Integer.parseInt(data.get("task_id")));
             status = "right";

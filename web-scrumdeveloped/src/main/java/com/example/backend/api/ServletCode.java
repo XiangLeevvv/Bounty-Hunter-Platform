@@ -1,4 +1,3 @@
-
 package com.example.backend.api;
 
 import com.aliyuncs.exceptions.ClientException;
@@ -11,14 +10,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 这个类用于注册验证码相关操作.
+ * @author ghy
+ * @version 1.0
+ */
 @RestController
 public class ServletCode {
     @Autowired
     CodeDAO codeDAO;
 
+    /**
+     * 用于单元测试初始化Code类.
+     * @param codeDAO 接收userDAO.
+     */
     public ServletCode(CodeDAO codeDAO){
         this.codeDAO=codeDAO;
     }
+
+    /**
+     * 获取验证码.
+     * @param data 接收用户手机号.
+     * @return 状态status及报错细节details.
+     */
     @PostMapping("/getCode")
     @ResponseBody
     public Map<String, Object> getCode(@RequestBody Map<String, String> data) throws ClientException {
