@@ -124,14 +124,13 @@ export default {
         }
       )
         .then((response) => {
-          if (response.data.status==="right"){
-          this.$message.success({
-            message: '获取成功',
-            showClose: true,
-            type: 'success'
-          })
-          }
-          else{
+          if (response.data.status === 'right') {
+            this.$message.success({
+              message: '获取成功',
+              showClose: true,
+              type: 'success'
+            })
+          } else {
             this.$message.error({
               message: response.data.details,
               showClose: true,
@@ -149,39 +148,39 @@ export default {
         )
     },
     submitForm (formName) {
-       this.$refs[formName].validate((valid) => {
-       if (valid) {
-      this.$axios.post('api/register',
-        {
-          'user_name': this.ruleForm.name,
-          'user_password': this.ruleForm.pass,
-          'user_phone': this.ruleForm.phone,
-          'user_code': this.ruleForm.vcode,
-          'user_gender': this.ruleForm.sex
-        }
-      )
-        .then((response) => {
-          if (response.data.status === 'wrong') { this.$message.error(response.data.details) } else {
-            this.$message.success({
-              message: response.data.details,
-              showClose: true,
-              type: 'success'
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios.post('api/register',
+            {
+              'user_name': this.ruleForm.name,
+              'user_password': this.ruleForm.pass,
+              'user_phone': this.ruleForm.phone.toString(),
+              'user_code': this.ruleForm.vcode,
+              'user_gender': this.ruleForm.sex
+            }
+          )
+            .then((response) => {
+              if (response.data.status === 'wrong') { this.$message.error(response.data.details) } else {
+                this.$message.success({
+                  message: response.data.details,
+                  showClose: true,
+                  type: 'success'
+                })
+              }
+            },
+            (response) => {
+              this.$message.error({
+                message: '注册失败',
+                showClose: true,
+                type: 'error'
+              })
             })
-          }
-        },
-        (response) => {
-          this.$message.error({
-            message: '注册失败',
-            showClose: true,
-            type: 'error'
-          })
-        })
-         } else {
-           console.log('error submit!!')
-           return false
-         }
-       }
-       )
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      }
+      )
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

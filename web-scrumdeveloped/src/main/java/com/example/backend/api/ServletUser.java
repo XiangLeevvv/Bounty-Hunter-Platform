@@ -2,6 +2,7 @@
 package com.example.backend.api;
 
 import com.example.backend.dao.UserDAO;
+import com.example.backend.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +16,21 @@ public class ServletUser {
     UserDAO userDAO;
     @PostMapping("/avatar")
     @ResponseBody
-    public Map<String,String> getdd()
+    public Map<String,String> setAvatar(@RequestBody Map<String, String> data)
     {
         Map<String, String> map = new HashMap<String, String>();
+        if(data.containsKey("userName")){
+            UserEntity user = userDAO.findByUserName(data.get("userName")).get(0);
+            user.setUserAvatar(data.get("userAvatar"));
+            userDAO.save(user);
+            map.put("status", "right");
+            map.put("details", "save success");
+        }
+        else{
+            map.put("status", "failed");
+            map.put("details", "can't find userName");
+        }
 
-        map.put("status", "ok");
         return map;
     }
     @PostMapping("/getUserInfo")

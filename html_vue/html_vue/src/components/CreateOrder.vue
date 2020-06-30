@@ -92,8 +92,7 @@ export default {
             callback(new Error('限额500元'))
           } else if (value < 0) {
             callback(new Error('不能小于0'))
-          }
-          else {
+          } else {
             callback()
           }
         }
