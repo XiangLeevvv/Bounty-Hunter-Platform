@@ -4,7 +4,7 @@
         <div class="block">
             <el-upload
               class="avatar-uploader"
-              action="/api/api/avatar"
+              action="https://jsonplaceholder.typicode.com/posts/"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -12,7 +12,8 @@
               <img v-if="src" :src="src" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <p><span class="demonstration">{{user_name}}</span></p>
+            <el-button size="small" type="primary" @click="Upload">上传</el-button>
+            <p><span class="demonstration" style="font-size: 20px">{{user_name}}</span></p>
             <el-button :plain="true" @click="logout">登出</el-button>
         </div>
         <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
@@ -73,6 +74,24 @@ export default {
       localStorage.removeItem('User_avatar')
       this.$router.push('/index')
       this.$socket.close()
+    },
+    Upload () {
+      this.$axios.post('/api/avatar',
+        {
+          userName: localStorage.getItem('UserName'),
+          userAvatar: localStorage.getItem('User_avatar')
+        }
+      ).then(response => {
+        if (response.data.status === 'right') {
+          this.$message.success({
+            message: response.data.details,
+            showClose: true,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(response.data.details)
+        }
+      })
     },
     handleAvatarSuccess (res, file) {
       this.src = 'data:image/jpeg;base64,' + localStorage.getItem('User_avatar')

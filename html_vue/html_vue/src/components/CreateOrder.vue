@@ -88,11 +88,13 @@ export default {
         if (!Number.isInteger(value)) {
           callback(new Error('请输入数字值'))
         } else {
-          // if (value > 100) {
-          //   callback(new Error('必须少于100元'))
-          // } else {
-          callback()
-          // }
+          if (value > 500) {
+            callback(new Error('限额500元'))
+          } else if (value < 0) {
+            callback(new Error('不能小于0'))
+          } else {
+            callback()
+          }
         }
       }, 1000)
     }
@@ -105,7 +107,7 @@ export default {
     }
     return {
       visible: false,
-      isref:'reference',
+      isref: 'reference',
       ruleForm: {
         name: '',
         introduce: '',
@@ -232,7 +234,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.visible=false;
+          this.visible = false
           let nodes = this.$refs['cascaderAddr'].getCheckedNodes()
           let i = 0
           let tags = []
@@ -374,18 +376,29 @@ export default {
       m = m < 10 ? ('0' + m) : m
       let s = date.getSeconds()
       s = s < 10 ? ('0' + s) : s
-      return '"'+y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s+'"'
+      return '"' + y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s + '"'
     },
 
-    beforeSubmit:function (formName) {
+    beforeSubmit: function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.visible=true;
-        }else{
-          this.visible=false;
+          var st = this.ruleForm.time[1].replace(/-/g, '/')
+          var date = new Date(st)
+          var now = new Date()
+          if (now < date) {
+            this.visible = true
+          } else {
+            this.visible = false
+            this.$message({
+              type: 'error',
+              message: '时间范围错误'
+            })
+          }
+        } else {
+          this.visible = false
         }
       })
-    },
+    }
   }
 }
 </script>

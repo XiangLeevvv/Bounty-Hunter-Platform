@@ -125,6 +125,9 @@ export default {
         this.userId = response.data.user_Id
         this.$socket.emit('checkup', this.task[0].publisher)
         this.userAvatar = 'data:image/jpeg;base64,' + response.data.user_avatar
+        if (this.task[0].publisher === localStorage.getItem('UserName')) {
+          this.getup()
+        }
       })
         .catch((error) => {
           this.$message.error({
