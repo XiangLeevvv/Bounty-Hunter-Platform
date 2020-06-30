@@ -93,6 +93,9 @@ export default {
           } else if (value < 0) {
             callback(new Error('不能小于0'))
           }
+          else {
+            callback()
+          }
         }
       }, 1000)
     }
