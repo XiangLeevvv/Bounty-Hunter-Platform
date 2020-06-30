@@ -47,6 +47,9 @@ export default {
         callback(new Error('请输入密码'))
       } else {
         if (this.ruleForm.checkPass !== '') {
+          if (value.length < 6) {
+            callback(new Error('密码位数不合法'))
+          }
           this.$refs.ruleForm.validateField('checkPass')
         }
         callback()
