@@ -107,7 +107,7 @@ export default {
     }
     return {
       visible: false,
-      isref:'reference',
+      isref: 'reference',
       ruleForm: {
         name: '',
         introduce: '',
@@ -382,12 +382,23 @@ export default {
     beforeSubmit: function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.visible = true
+          var st = this.ruleForm.time[1].replace(/-/g, '/')
+          var date = new Date(st)
+          var now = new Date()
+          if (now < date) {
+            this.visible = true
+          } else {
+            this.visible = false
+            this.$message({
+              type: 'error',
+              message: '时间范围错误'
+            })
+          }
         } else {
           this.visible = false
         }
       })
-    },
+    }
   }
 }
 </script>
