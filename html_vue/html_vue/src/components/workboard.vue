@@ -177,6 +177,7 @@ export default {
     }
   },
   mounted () {
+    this.taskType = 'published'
     this.$axios.post('/api/task/publishedTask',
       {
         'user_name': localStorage.getItem('UserName'),
