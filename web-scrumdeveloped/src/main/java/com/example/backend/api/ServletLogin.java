@@ -56,9 +56,11 @@ public class ServletLogin {
                 status = "right";
                 String userAvatar = list.get(0).getUserAvatar();
                 int userId = list.get(0).getUserId();
+                details = "success";
 
                 map.put("user_avatar", userAvatar);
                 map.put("user_id", userId);
+                map.put("details", details);
             }
         }
         map.put("status", status);
