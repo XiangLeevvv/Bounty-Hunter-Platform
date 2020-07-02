@@ -66,6 +66,7 @@ export default {
       flag: 0,
       userflag: true,
       up: false,
+      isPublisher: false,
       status: {
         'background-color': '#CE3C34',
         'border-radius': '100%',
@@ -100,10 +101,14 @@ export default {
         'task_id': this.task_id
       }).then((response) => {
       this.task = response.data[this.task_type]
+      // 判断是不是任务发布者
+      this.isPublisher = localStorage.getItem('UserName') === this.task[0].publisher
       if (this.task_type === 'ing') {
         if (this.userflag) {
+          // 我发布的任务被别人领取正处于进行中
           this.flag = 3
         } else {
+          // 我领取别人发布的任务正处于进行中
           this.flag = 2
           this.chated = true
         }

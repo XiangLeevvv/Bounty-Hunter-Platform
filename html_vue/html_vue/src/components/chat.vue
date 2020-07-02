@@ -28,8 +28,9 @@
             resize=none
             autocomplete="off"
             maxlength="200"
-            show-word-limit></el-input>
-          <el-button @click="send" style="float:right;">发送</el-button>
+            show-word-limit
+            @keyup.enter.native="send"></el-input>
+          <el-button @click="send" style="float:right;margin-top: 3px;font-weight: 600" size="small">发送</el-button>
         </div>
     </el-card>
   </div>
@@ -100,7 +101,11 @@ export default {
     send () {
       let data = this.message
       this.$socket.emit('message', data)
-      this.items.push({label: data, user: this.user, avastyle: {'line-height': '30px', float: 'right', margin: '5px', 'background-color': '#ffc107', width: '30px', height: '30px'}, style: {float: 'right', border: '0', margin: '5px'}})
+      this.items.push({label: data,
+        user: this.user,
+        avastyle: {'line-height': '30px', float: 'right', margin: '5px', 'background-color': '#ffc107', width: '30px', height: '30px'},
+        style: {float: 'right', border: '0', margin: '5px'}})
+      this.message = ''
     },
     scrollDown () {
       this.$refs['myScrollbar'].wrap.scrollTop = this.$refs['myScrollbar'].wrap.scrollHeight
