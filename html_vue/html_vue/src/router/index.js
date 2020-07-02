@@ -22,7 +22,7 @@ const router = new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      component: HelloWorld
+      component: Index
     },
     {
       path: '/index',
